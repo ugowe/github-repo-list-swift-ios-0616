@@ -12,6 +12,25 @@ class ReposDataStore {
     
     static let sharedInstance = ReposDataStore()
     
+    var repositories: [GithubRepository] = []
     
-
+    func getRepositoriesWithCompletion(completion:() -> ()){
+        GithubAPIClient.getRepositoriesWithCompletion { (responseDataArray) in
+            self.repositories.removeAll()
+            
+            for git in responseDataArray{
+                let gitrepo = GithubRepository(dictionary: git as! NSDictionary)
+                
+                self.repositories.append(gitrepo)
+                
+            }
+            
+            if self.repositories.count > 0{
+                completion()
+            }
+            
+            print(responseDataArray)
+        }
+    }
 }
+
